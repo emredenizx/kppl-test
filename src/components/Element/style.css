@@ -1,0 +1,61 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    background-color: #f7f7f7;
+    padding: 1em;
+    border: 1px solid #ececec;
+    border-radius: 4px;
+}
+
+.text {
+    background-color: #f9f9f9;
+    padding: .45em;
+    font-size: 13px;
+}
+
+.folder {
+    display: flex;
+    flex-direction: column;
+    background-color: #ececec;    
+    padding: 1em;
+    border-radius: 2px;
+    min-height: 150px;
+}
+
+.folder:not(:first-child) {
+    margin-top: 1em;
+}
+
+.label {
+    font-weight: 300;
+}
+
+.folder .label, .section > .label{
+    font-weight: 700;
+}
+
+.options {
+    margin: .4em 0;
+}
+
+
+.options>ul {
+    display: flex;
+}
+
+.options ul>li {
+    font-size: 12px;
+    list-style: none;
+    cursor: pointer;
+    background: #efefef;
+    padding: 0.25em 0.5em;
+    border-radius: 10px;
+}
+
+.options ul>li:hover {
+    background: #a8cdec;
+}
+
+.options ul>li:not(:first-child) {
+    margin-left: 0.75em;
+}

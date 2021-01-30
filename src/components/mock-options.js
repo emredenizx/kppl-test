@@ -29,7 +29,7 @@ export const mock_options = {
             "name": "Option FD 3"
         }
     ],
-    'op-slp-1':[
+    'op-sc-100':[
         {
             "id": "op-sc-1",
             "name": "Option 1"

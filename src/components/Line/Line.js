@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { getSuggestions, mock_suggestions } from "../../api/api.config";
+import React, { useEffect, useState } from "react";
+import { mock_suggestions } from "../../api/api.config";
 
 import styles from './Line.module.css'
 

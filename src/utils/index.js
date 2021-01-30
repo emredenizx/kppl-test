@@ -9,6 +9,7 @@ const mapChildren = (item, structure) => {
             return children;
         }
     });
+    
     return {
         ...item,
         data
