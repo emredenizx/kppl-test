@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    margin: 1em 0;
+}
+
+.element {
+    background-color: aquamarine;
+}
+
+.options {
+    margin: 1em 0;
+}
+
+.options > ul {
+    display: flex;    
+}
+
+.options ul > li {
+    list-style: none;
+    cursor: pointer;
+    background: #efefef;
+    padding: 0.5em;
+    border-radius: 15px;
+}
