@@ -5,12 +5,14 @@
     padding: 1em;
     border: 1px solid #ececec;
     border-radius: 4px;
+    min-height: 800px;
 }
 
 .text {
-    background-color: #f9f9f9;
+    background-color: #fff;
     padding: .45em;
     font-size: 13px;
+    margin:.25em
 }
 
 .folder {
@@ -26,7 +28,7 @@
     margin-top: 1em;
 }
 
-.label {
+.text > p.label {
     font-weight: 300;
 }
 
@@ -38,7 +40,6 @@
     margin: .4em 0;
 }
 
-
 .options>ul {
     display: flex;
 }
@@ -47,13 +48,18 @@
     font-size: 12px;
     list-style: none;
     cursor: pointer;
-    background: #efefef;
+    background: #f1f1f1;
     padding: 0.25em 0.5em;
     border-radius: 10px;
 }
 
 .options ul>li:hover {
     background: #a8cdec;
+}
+
+.options ul>li.active{    
+   border-bottom: 2px solid #a8cdec;
+  border-radius: 0;
 }
 
 .options ul>li:not(:first-child) {
