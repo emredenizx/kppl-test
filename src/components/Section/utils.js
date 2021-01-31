@@ -9,11 +9,12 @@ const mapChildElements = (item, structure) => {
             return children;
         }
     });
-    
+
     return {
         ...item,
         data
     };
 };
+
 
 export { mapChildElements }
