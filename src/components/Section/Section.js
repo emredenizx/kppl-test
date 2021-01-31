@@ -1,21 +1,77 @@
 import React, { useEffect, useReducer, useCallback } from "react";
 import { mock } from "../mock-data";
-import { mapChildren } from "../../utils";
+import { mapChildElements } from "../../utils";
 import Element from "../Element";
 
-const init = {
+const initial_data = {
   section: null,
-  active_options: [],
-  location: []
+  suggestion_params: {
+    active_options: {
+      section: []
+    },
+    folder_locations: []
+  }
 }
 
-const reducer = (state, action) => {
+const dataReducer = (state, action) => {
   switch (action.type) {
-    case 'setData':
+    case 'SET_DATA': {
+      const { section_data, initial_active_option } = action.payload;
       return {
         ...state,
-        section: action.payload
+        section: section_data,
+        suggestion_params: {
+          ...state.suggestion_params,
+          active_options: {
+            ...state.suggestion_params.active_options,
+            section: [
+              ...(state.suggestion_params.active_options.section || []),
+              initial_active_option
+            ]
+          }
+        },
       }
+    }
+    case 'ADD_ACTIVE_OPTION': {
+      const { id, want } = action.payload;
+      return {
+        ...state,
+        suggestion_params: {
+          ...state.suggestion_params,
+          active_options: {
+            ...state.suggestion_params.active_options,
+            section: [
+              ...(state.suggestion_params.active_options.section || []),
+              id
+            ],
+            [want]: [
+              ...(state.suggestion_params.active_options[want] || []),
+              id
+            ]
+          }
+        },
+      }      
+    }
+    case 'REMOVE_ACTIVE_OPTION': {
+      const { id, want } = action.payload;
+      return {
+        ...state,
+        suggestion_params: {
+          ...state.suggestion_params,
+          active_options: {
+            ...state.suggestion_params.active_options,
+            section: [
+              ...(state.suggestion_params.active_options.section || []),
+              id
+            ],
+            [want]: [
+              ...(state.suggestion_params.active_options[want] || []),
+              id
+            ]
+          }
+        },
+      }      
+    }
     default:
       break;
   }
@@ -23,17 +79,27 @@ const reducer = (state, action) => {
 
 const Section = () => {
 
-  const [data, dispatch] = useReducer(reducer, init)
-  const section = data.section
+  const [data, dispatch] = useReducer(dataReducer, initial_data);
 
-  const setData = useCallback((structure) => {
-    const section = structure.find((item) => item.type === "section");
-    const section_data = mapChildren(section, structure)
+  const section = data.section;
+  const suggestion_params = data.suggestion_params;
+  // console.log(data)
+
+  const setData = useCallback((data) => {
+    const section = data.find((item) => item.type === "section");
+    const section_data = mapChildElements(section, data)
+
+    const firstTextElement = data.find((item) => item.type === "text")
+    const initial_active_option = firstTextElement.original.id;
+
     dispatch({
-      type: 'setData',
-      payload: section_data
+      type: 'SET_DATA',
+      payload: {
+        section_data,
+        initial_active_option
+      }
     })
-}, []);
+  }, []);
 
   useEffect(() => {
     const response = mock.data.structure;
@@ -43,7 +109,10 @@ const Section = () => {
   return (
     <>
       { section &&
-        <Element {...section} />
+        <Element
+          suggestion_params={suggestion_params}
+          dispatch={dispatch}
+          {...section} />
       }
     </>
   );
