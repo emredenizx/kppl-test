@@ -1,35 +1,123 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import Line from "../Line";
-import { Context } from "../../context/data.context";
-import { mock } from "../mock-data";
+import React, { useEffect, useReducer, useCallback } from "react";
+//import { mock } from "../mock-data";
+import Element from "../Element";
+import { mapChildElements } from "./utils";
+import { getStructure } from "../../api/api.config";
 
+const initial_data = {
+  section: null,
+  suggestion_params: {
+    active_options: {
+      section: []
+    },
+    locations: []
+  }
+}
+
+const dataReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_DATA': {
+      const { section_data, initial_active_option } = action.payload;
+      return {
+        ...state,
+        section: section_data,
+        suggestion_params: {
+          ...state.suggestion_params,
+          active_options: {
+            ...state.suggestion_params.active_options,
+            section: [
+              ...(state.suggestion_params.active_options.section || []),
+              initial_active_option
+            ]
+          }
+        },
+      }
+    }
+    case 'ADD_ACTIVE_OPTION': {
+      const { id, want, locations } = action.payload;
+      return {
+        ...state,
+        suggestion_params: {
+          ...state.suggestion_params,
+          active_options: {
+            ...state.suggestion_params.active_options,
+            section: [
+              ...(state.suggestion_params.active_options.section || []),
+              id
+            ],
+            [want]: [
+              ...(state.suggestion_params.active_options[want] || []),
+              id
+            ]
+          },
+          locations: [...locations]
+        },
+      }
+    }
+    case 'REMOVE_ACTIVE_OPTION': {
+      const { id, want } = action.payload;
+      const section = state.suggestion_params.active_options.section.filter(item => item !== id)
+      const folders = state.suggestion_params.active_options[want].filter(item => item !== id)
+      return {
+        ...state,
+        suggestion_params: {
+          ...state.suggestion_params,
+          active_options: {
+            ...state.suggestion_params.active_options,
+            section: [...section],
+            [want]: [...folders]
+          },
+          locations: []
+        },
+      }
+    }
+    default:
+      break;
+  }
+}
 
 const Section = () => {
 
-  const { data } = useContext(Context)
-  const structure = data.structure
+  const [data, dispatch] = useReducer(dataReducer, initial_data);
 
-  console.log('MAIN', data)
-  
+  const section = data.section;
+  const suggestion_params = data.suggestion_params;
+  console.log(data)
+
+  const setData = useCallback((data) => {
+    const section = data.find((item) => item.type === "section");
+    const section_data = mapChildElements(section, data)
+
+    const firstTextElement = data.find((item) => item.type === "text")
+    const initial_active_option = firstTextElement.original.id;
+
+    dispatch({
+      type: 'SET_DATA',
+      payload: {
+        section_data,
+        initial_active_option
+      }
+    })
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await getStructure();         
+        setData(response.data.data.structure)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [setData]);
+
   return (
-    
     <>
-      { structure &&
-        <div className='section'>
-          <h1 className='section-label'>
-            {structure.properties.name}
-          </h1>
-         {/*  <div><ul>{options.map(option => <li>{option}</li>)}</ul></div> */}
-          <div className='container'>
-            {structure.data.map((element) => (
-
-            <Line
-              key={element.id}
-              line={element}             
-            />
-          ))}
-          </div>
-        </div>
+      { section &&
+        <Element
+          suggestion_params={suggestion_params}
+          dispatch={dispatch}
+          {...section} />
       }
     </>
   );
@@ -37,11 +125,6 @@ const Section = () => {
 
 export default Section;
 
-// line has only one element?
-// folder data da dolu olabilir mi mesela içinde text 
-// come in order?
-// on purpose 2 folder 2??
-// section text de ekleniyor mu
 
-// test?
-// ilk text bağımsız değil mi?
+// ORIGINAL IDs ARS NOT UNIQUE FOR FOLDERS-TYPE ITEMS IN STRUCTURE.
+// ASSUMED FIRST TEXT ELEMENT IN STRUCTURE TO BE ACTIVE OPTION FOR SECTION.
