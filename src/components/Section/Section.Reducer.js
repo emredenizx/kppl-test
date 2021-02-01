@@ -28,7 +28,7 @@ const SectionReducer = (state, action) => {
                 original: { id, name },
                 properties: { name },
                 type: 'text'
-            }           
+            }
             return {
                 ...state,
                 suggestion_params: {
@@ -58,7 +58,7 @@ const SectionReducer = (state, action) => {
             const { id } = option;
             const section = state.suggestion_params.active_options.section.filter(item => item !== id)
             const folders = state.suggestion_params.active_options[want].filter(item => item !== id)
-            const selections = state.selected_options[want].filter(item => item !== id)
+            const selections = state.selected_options[want].filter(item => item.id !== id)
 
             return {
                 ...state,

@@ -8,7 +8,7 @@ export const initial_data = {
         },
         locations: []
     },
-    selected_options : {}
+    selected_options: {}
 }
 
 export const SectionContext = createContext(initial_data);

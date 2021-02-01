@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import Element from '../Element'
 import Options from '../../Options'
-
 import { SectionContext } from '../../Section/Section.Context'
 
 const Folder = ({ ...props }) => {

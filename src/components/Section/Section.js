@@ -11,8 +11,6 @@ const Section = () => {
   const [data, dispatch] = useReducer(SectionReducer, initial_data);
   const { section,suggestion_params, selected_options } = data;  
 
-  console.log(suggestion_params)
-
   const setData = useCallback((data) => {
     const section = data.find((item) => item.type === "section");
     const section_data = mapChildElements(section, data)

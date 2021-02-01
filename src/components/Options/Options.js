@@ -32,8 +32,7 @@ const Options = ({ onOptionSelect, type, locations, ...original }) => {
     (async () => {
       const params = { "want": want, "active": [...(active_options || [])] }
       try {
-        const response = await getSuggestions(params);
-        console.log(response)
+        const response = await getSuggestions(params);        
         setOptions([...response.data.data.response])
       } catch (error) {
         console.log(error)
@@ -47,15 +46,16 @@ const Options = ({ onOptionSelect, type, locations, ...original }) => {
     setActive({ ...active, [option.id]: id });
 
     const isActive = selected_options[want]?.find(selected_option => selected_option.properties.name === option.name)
+    
     if (isActive) {
       dispatch({
         type: actions.REMOVE_ACTIVE_OPTION,
-        payload: { want, option}
+        payload: { want, option }
       })
     } else {
       dispatch({
         type: actions.ADD_ACTIVE_OPTION,
-        payload: { want, option, option_locations}
+        payload: { want, option, option_locations }
       });
     }
   }
