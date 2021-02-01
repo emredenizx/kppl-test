@@ -1,13 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { getSuggestions } from "../../api/api.config";
 import { countLocationMatch } from "./utils.js";
+import { SectionContext } from "../Section/Section.Context";
 
-const Options = ({ onOptionSelect, type, locations, suggestion_params, ...original }) => {
+const Options = ({ onOptionSelect, type, locations, ...original }) => {
 
   const { want } = original;
   const [options, setOptions] = useState([])
   const [active, setActive] = useState({})
   const [locationMatch, setLocationMatch] = useState(0)
+
+  const {suggestion_params} = useContext(SectionContext)
 
   let active_options;
   type === 'section' ?

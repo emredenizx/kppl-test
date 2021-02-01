@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { SectionContext } from "../Section/Section.Context";
 import Options from "../Options";
 import './style.css';
 
-const Element = ({ suggestion_params, dispatch, ...props }) => {
+const Element = ({ ...props }) => {
 
     const { type, data, original, properties } = props;
     const [selectedOptions, setSelectedOption] = useState([]);
+    const {dispatch} = useContext(SectionContext)
+
 
     //console.log(`${type}`, suggestion_params)
 
@@ -42,13 +45,13 @@ const Element = ({ suggestion_params, dispatch, ...props }) => {
     }
 
     if (type === 'line') {
-        return data ? data.map(item => <Element key={item.id} dispatch={dispatch} suggestion_params={suggestion_params} {...item} />) : null
+        return data ? data.map(item => <Element key={item.id} {...item} />) : null
     }
     else if (type === 'text') {
         return (
             <div className={type}>
                 {properties.name}
-                {data[0] && data.map(item => <Element key={item.id} dispatch={dispatch} suggestion_params={suggestion_params} {...item} />)}
+                {data[0] && data.map(item => <Element key={item.id} {...item} />)}
             </div>
         );
     }
@@ -61,16 +64,15 @@ const Element = ({ suggestion_params, dispatch, ...props }) => {
                         <Options
                             onOptionSelect={onOptionSelect}
                             type={type}
-                            locations={properties.locations}
-                            suggestion_params={suggestion_params}
+                            locations={properties.locations}                            
                             {...original} />
                     </div>
                 }
                 {selectedOptions &&
                     selectedOptions.map(option =>
-                        <Element key={option.id} suggestion_params={null} {...option} />
+                        <Element key={option.id} {...option} />
                     )}
-                {data[0] && data.map(item => <Element key={item.id} dispatch={dispatch} suggestion_params={suggestion_params} {...item} />)}
+                {data[0] && data.map(item => <Element key={item.id} {...item} />)}
             </div>
         );
     } else {
