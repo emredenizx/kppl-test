@@ -1,0 +1,3 @@
+export const SET_DATA = 'SET_DATA';
+export const ADD_ACTIVE_OPTION = 'ADD_ACTIVE_OPTION';
+export const REMOVE_ACTIVE_OPTION = 'REMOVE_ACTIVE_OPTION';

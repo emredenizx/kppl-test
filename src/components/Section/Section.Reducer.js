@@ -1,6 +1,8 @@
+import * as actions from './actions'
+
 const SectionReducer = (state, action) => {
     switch (action.type) {
-        case 'SET_DATA': {
+        case actions.SET_DATA: {
             const { section_data, initial_active_option } = action.payload;
             return {
                 ...state,
@@ -17,8 +19,16 @@ const SectionReducer = (state, action) => {
                 },
             }
         }
-        case 'ADD_ACTIVE_OPTION': {
-            const { id, want, locations } = action.payload;
+        case actions.ADD_ACTIVE_OPTION: {
+            const { want, option, option_locations } = action.payload;
+            const { id, name } = option;
+            const selectedOption = {
+                data: [''],
+                id,
+                original: { id, name },
+                properties: { name },
+                type: 'text'
+            }           
             return {
                 ...state,
                 suggestion_params: {
@@ -34,14 +44,22 @@ const SectionReducer = (state, action) => {
                             id
                         ]
                     },
-                    locations: [...locations]
+                    locations: [...option_locations]
                 },
+                selected_options: {
+                    ...state.selected_options,
+                    [want]: [...(state.selected_options[want] || []), selectedOption]
+                }
+
             }
         }
-        case 'REMOVE_ACTIVE_OPTION': {
-            const { id, want } = action.payload;
+        case actions.REMOVE_ACTIVE_OPTION: {
+            const { option, want } = action.payload;
+            const { id } = option;
             const section = state.suggestion_params.active_options.section.filter(item => item !== id)
             const folders = state.suggestion_params.active_options[want].filter(item => item !== id)
+            const selections = state.selected_options[want].filter(item => item !== id)
+
             return {
                 ...state,
                 suggestion_params: {
@@ -53,6 +71,10 @@ const SectionReducer = (state, action) => {
                     },
                     locations: []
                 },
+                selected_options: {
+                    ...state.selected_options,
+                    [want]: [...selections]
+                }
             }
         }
         default:

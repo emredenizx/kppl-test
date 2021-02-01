@@ -1,17 +1,17 @@
 import React, { useEffect, useReducer, useCallback } from "react";
+import * as actions from './actions'
 import Element from "../Element";
 import SectionReducer from "./Section.Reducer";
 import { SectionContext, initial_data } from "./Section.Context";
 import { mapChildElements } from "./utils";
-import { getStructure } from "../../api/api.config";
+import { getStructure } from "../../api/section.api";
 
 const Section = () => {
 
   const [data, dispatch] = useReducer(SectionReducer, initial_data);
+  const { section,suggestion_params, selected_options } = data;  
 
-  const section = data.section;
-  const suggestion_params = data.suggestion_params;
-  console.log(data)
+  console.log(suggestion_params)
 
   const setData = useCallback((data) => {
     const section = data.find((item) => item.type === "section");
@@ -21,7 +21,7 @@ const Section = () => {
     const initial_active_option = firstTextElement.original.id;
 
     dispatch({
-      type: 'SET_DATA',
+      type: actions.SET_DATA,
       payload: {
         section_data,
         initial_active_option
@@ -43,8 +43,8 @@ const Section = () => {
   return (
     <>
       { section &&
-        <SectionContext.Provider value={{suggestion_params, dispatch}}>
-          <Element           
+        <SectionContext.Provider value={{ suggestion_params, selected_options, dispatch }}>
+          <Element
             {...section} />
         </SectionContext.Provider>
       }
@@ -54,6 +54,3 @@ const Section = () => {
 
 export default Section;
 
-
-// ORIGINAL IDs ARS NOT UNIQUE FOR FOLDERS-TYPE ITEMS IN STRUCTURE.
-// ASSUMED FIRST TEXT ELEMENT IN STRUCTURE TO BE ACTIVE OPTION FOR SECTION.
